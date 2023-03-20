@@ -1,14 +1,10 @@
-require("dotenv").config();
 const mongoose = require("mongoose");
-const mongoose_ip = process.env.MONGOOSE;
 
 mongoose.set("strictQuery", true);
 mongoose
-  .connect(mongoose_ip, {
+  .connect("mongodb://127.0.0.1:27017/blog", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("Conexion establecida con la Base de Datos"))
-  .catch((err) =>
-    console.log("Algo ha salido mal al conectarse a la Base de Datos", err)
-  );
+  .then(() => console.log("Conexion establecida con la BD"))
+  .catch((error) => console.log("Algo ha salido mal", error));
