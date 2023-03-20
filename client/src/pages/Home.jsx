@@ -1,9 +1,10 @@
 import React from 'react'
+import HomeHeader from '../layouts/HomeHeader'
 
 const Home = () => {
   return (
     <div>
-      Home
+      <HomeHeader />
     </div>
   )
 }
