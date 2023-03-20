@@ -4,7 +4,7 @@ import React from 'react'
 const Logo = () => {
   return (
     <div>
-      <img src={require('../../assets/images/logo-blog.png')} />
+      <img className='logo' src={require('../../assets/images/logo-blog.png')} />
     </div>
   )
 }

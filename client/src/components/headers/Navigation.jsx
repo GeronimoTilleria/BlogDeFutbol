@@ -1,23 +1,18 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Navigation = () => {
     return (
         <nav>
-            <ul className='nav-style d-flex gap-4'>
+            <ul className='nav-style d-flex gap-4 p-0 m-0'>
                 <li>
-                    <a>Inicio</a>
+                    <Link className='link-header' to='/'>Inicio</Link>
                 </li>
                 <li>
-                    <a>Blogs</a>
+                    <Link className='link-header' to='/blogs'>Blogs</Link>
                 </li>
                 <li>
-                    <a>Acerca de</a>
-                </li>
-                <li>
-                    <a>Cerrar sesion</a>
-                </li>
-                <li>
-                    <a>Iniciar Sesion</a>
+                    <Link className='link-header' to='/about'>Acerca de</Link>
                 </li>
             </ul>
         </nav>
