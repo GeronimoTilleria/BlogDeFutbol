@@ -1,21 +1,17 @@
-require("dotenv").config();
 const express = require("express");
-const app = express();
 const cors = require("cors");
+const app = express();
 const cookieParser = require("cookie-parser");
 
-const puerto = process.env.PORT;
-
-require("./config/mongoose.config");
-
-app.use(cors());
-app.use(express.json(), express.urlencoded({ extended: true }));
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-require("./routes/Usuario.routes")(app);
-require("./routes/Publicacion.routes")(app);
+require("./config/mongoose.config");
 
-app.listen(puerto, () =>
-  console.log(`Servidor conectado en el puerto ${puerto}`)
-);
+require("./routes/User.routes")(app);
+
+require("./routes/Post.routes")(app);
+
+app.listen(8000, () => console.log("Conectado al servidor"));
