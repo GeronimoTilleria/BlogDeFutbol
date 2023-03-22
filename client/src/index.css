@@ -2,7 +2,9 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
@@ -23,7 +25,7 @@ code {
     monospace;
 }
 
-.main-container{
+.main-container {
   max-width: 70rem;
   margin: 0 auto;
 }
@@ -67,6 +69,7 @@ code {
 .header-text {
   margin-top: 25rem;
 }
+
 .header-text p {
   color: white;
   font-size: 3rem;
@@ -74,3 +77,49 @@ code {
   font-family: 'PT Sans Narrow', sans-serif;
 }
 
+.list-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem
+}
+
+.header-about {
+  background-image: url(./assets/images/acerca-de.jpg);
+  height: 40rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  position: relative;
+}
+
+.content-header-about {
+  background-color: rgb(0 0 0 / 50%);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.about-content p {
+  text-align: start;
+}
+
+.header-list-blog {
+  background-image: url(./assets/images/blog-list-image.jpg);
+  height: 40rem;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  position: relative;
+}
+
+.content-header-list-blog {
+  background-color: rgb(0 0 0 / 50%);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
