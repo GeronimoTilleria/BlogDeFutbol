@@ -5,8 +5,10 @@ import AboutUs from "../pages/AboutUs";
 import BlogDetail from "../pages/BlogDetail";
 import BlogList from "../pages/BlogList";
 import Home from "../pages/Home";
+import Login from "../pages/Login";
 //import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
+import Register from "../pages/Register";
 //import Register from "../pages/Register";
 
 export const routes = createBrowserRouter([
@@ -19,14 +21,14 @@ export const routes = createBrowserRouter([
                 index: true,
                 element: <Home />,
             },
-            // {
-            //     path: '/login',
-            //     element: <Login />
-            // },
-            // {
-            //     path: '/register',
-            //     element: <Register />
-            // },
+            {
+                path: '/login',
+                element: <Login />
+            },
+            {
+                path: '/register',
+                element: <Register />
+            },
             {
                 path: '/blogs',
                 element: <BlogList />

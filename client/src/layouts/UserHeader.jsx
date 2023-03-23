@@ -3,14 +3,18 @@ import Logo from '../components/headers/Logo'
 import Navigation from '../components/headers/Navigation'
 
 const UserHeader = () => {
-  return (
-    <header className='bg-secondary'>
-      <div className='main-container bg-primary d-flex justify-content-between align-items-center py-4'>
-        <Logo />
-        <Navigation />
-      </div>
-    </header>
-  )
+    return (
+        <header>
+            <div className='bg-dark'>
+                <div className='main-container'>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <Logo />
+                        <Navigation />
+                    </div>
+                </div>
+            </div>
+        </header>
+    )
 }
 
 export default UserHeader
