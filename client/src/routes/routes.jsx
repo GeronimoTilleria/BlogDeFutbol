@@ -8,7 +8,6 @@ import EditPost from "../pages/EditPost";
 import Home from "../pages/Home";
 import Login from "../pages/Login";
 import NotFound from "../pages/NotFound";
-import PostPage from "../pages/PostPage";
 import Register from "../pages/Register";
 
 export const routes = createBrowserRouter([
