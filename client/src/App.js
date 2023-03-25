@@ -1,11 +1,14 @@
-import { RouterProvider} from 'react-router-dom';
-import './App.css';
-import {routes} from './routes/routes'
+import { RouterProvider } from "react-router-dom";
+import "./App.css";
+import { routes } from "./routes/routes";
+import { UserContextProvider } from "./contexts/UserContext";
 
 function App() {
   return (
     <div className="App">
-      <RouterProvider router={routes} />
+      <UserContextProvider>
+        <RouterProvider router={routes} />
+      </UserContextProvider>
     </div>
   );
 }

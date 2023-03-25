@@ -9,9 +9,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
 require("./config/mongoose.config");
-
 require("./routes/User.routes")(app);
-
 require("./routes/Post.routes")(app);
 
-app.listen(8000, () => console.log("Conectado al servidor"));
+app.listen(4000, () => console.log("Conectado al servidor"));

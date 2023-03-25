@@ -1,11 +1,16 @@
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const salt = bcrypt.genSaltSync(10);
 const secret = "asdfe45we45w345wegw345werjktjwertkj";
 
 module.exports.register = async (req, res) => {
   const { username, password } = req.body;
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: "Username and password are required" });
+  }
   try {
     const userDoc = await User.create({
       username,
@@ -20,13 +25,13 @@ module.exports.register = async (req, res) => {
 
 module.exports.login = async (req, res) => {
   const { username, password } = req.body;
-  const userDoc = await User.findOne({ username });
-  const passOk = bcrypt.compareSync(password, userDoc.password);
-  if (userDoc === null) {
-    res.status(400).json("wrong credentials");
-  } else {
+  try {
+    const userDoc = await User.findOne({ username });
+    if (!userDoc) {
+      return res.status(401).json({ message: "Wrong credentials" });
+    }
+    const passOk = bcrypt.compareSync(password, userDoc.password);
     if (passOk) {
-      // logged in
       jwt.sign({ username, id: userDoc._id }, secret, {}, (err, token) => {
         if (err) throw err;
         res.cookie("token", token).json({
@@ -35,20 +40,25 @@ module.exports.login = async (req, res) => {
         });
       });
     } else {
-      res.status(400).json("wrong credentials");
+      res.status(401).json({ message: "Wrong credentials" });
     }
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "An error occurred" });
   }
 };
 
 module.exports.logout = (req, res) => {
-  res.clearCookie("token");
-  res.status(200).json({ message: "Logout" });
+  res.clearCookie("token", { httpOnly: true });
+  res.status(200).json({ message: "Logged out successfully" });
 };
 
 module.exports.profile = (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, secret, {}, (err, info) => {
-    if (err) throw err;
+    if (err) {
+      return res.status(401).json({ message: "Invalid token" });
+    }
     res.json(info);
   });
 };

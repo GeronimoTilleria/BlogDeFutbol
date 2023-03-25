@@ -1,56 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CardBlog from '../components/blog/CardBlog';
-
-const list = [
-    {
-        name: 'Blog 1'
-    },
-    {
-        name: 'Blog 2'
-    },
-    {
-        name: 'Blog 3'
-    },
-    {
-        name: 'Blog 4'
-    },
-    {
-        name: 'Blog 5'
-    },
-    {
-        name: 'Blog 6'
-    },
-    {
-        name: 'Blog 7'
-    },
-]
+import axios from "axios";
 
 const ListBlogHome = () => {
 
     const [verTodo, setVerTodo] = useState(false);
+    const [posts, setPosts] = useState([]);
 
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await axios.get('http://localhost:4000/post');
+                setPosts(response.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchPosts();
+    }, []);
     return (
         <div className='main-container mt-5'>
             <h2>Publicaciones</h2>
             <div className='list-container mt-4'>
                 {
-                    list.length == 0 && <p className='mt-4'>No hay publicaciones...</p> 
+                    posts.length === 0 && <p className='mt-4'>No hay publicaciones...</p>
                 }
                 {
-                    list.length >= 3 ?
+                    posts.length >= 3 ?
                         verTodo ?
-                            list.map((elem, index) => <CardBlog key={index} element={elem} />) :
+                            posts.map((post) => (
+                                <CardBlog key={post.id} {...post} />
+                            )) :
                             <>
-                                <CardBlog element={list[0]} />
-                                <CardBlog element={list[1]} />
-                                <CardBlog element={list[2]} />
+                                <CardBlog element={posts[0]} {...posts[0]} />
+                                <CardBlog element={posts[1]} {...posts[1]} />
+                                <CardBlog element={posts[2]} {...posts[2]} />
                             </> :
-                        list.map((elem, index) => <CardBlog key={index} element={elem}/>)
+                        posts.map((post) => (
+                            <CardBlog key={post.id} {...post} />
+                        ))
                 }
             </div>
             <div className='text-end'>
                 {
-                    list.length > 3 ?
+                    posts.length > 3 ?
                         verTodo ?
                             <button className='mt-3 btn btn-success' onClick={() => setVerTodo(!verTodo)}>Ver Menos</button>
                             :

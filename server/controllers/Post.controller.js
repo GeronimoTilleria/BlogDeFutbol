@@ -4,9 +4,10 @@ const secret = "asdfe45we45w345wegw345werjktjwertkj";
 const jwt = require("jsonwebtoken");
 
 module.exports.createPost = async (req, res) => {
-  if (req.file === undefined) {
-    res.status(400).json("error");
-  } else {
+  try {
+    if (!req.file) {
+      throw new Error("No file was uploaded.");
+    }
     const { originalname, path } = req.file;
     const parts = originalname.split(".");
     const ext = parts[parts.length - 1];
@@ -14,64 +15,80 @@ module.exports.createPost = async (req, res) => {
     fs.renameSync(path, newPath);
 
     const { token } = req.cookies;
-    jwt.verify(token, secret, {}, async (err, info) => {
-      if (err) throw err;
-      const { tittle, summary, content } = req.body;
-      const postDoc = await Post.create({
-        tittle,
-        summary,
-        content,
-        image: newPath,
-        author: info.id,
-      });
-      res.json(postDoc);
+    const info = jwt.verify(token, secret);
+    const { title, summary, content } = req.body;
+    const postDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
     });
+    res.json(postDoc);
+  } catch (error) {
+    res.status(400).json(error.message);
   }
 };
 
 module.exports.updatePost = async (req, res) => {
-  let newPath = null;
-  if (req.file) {
-    const { originalname, path } = req.file;
-    const parts = originalname.split(".");
-    const ext = parts[parts.length - 1];
-    newPath = path + "." + ext;
-    fs.renameSync(path, newPath);
-  }
-
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
-    if (err) throw err;
-    const { id, tittle, summary, content } = req.body;
+  try {
+    const { id, title, summary, content } = req.body;
     const postDoc = await Post.findById(id);
-    const isAuthor = JSON.stringify(postDoc.author) === JSON.stringify(info.id);
-    if (!isAuthor) {
-      return res.status(400).json("you are not the author");
+    if (!postDoc) {
+      throw new Error("Post not found.");
     }
+
+    const { token } = req.cookies;
+    const info = jwt.verify(token, secret);
+    if (JSON.stringify(postDoc.author) !== JSON.stringify(info.id)) {
+      throw new Error("You are not the author.");
+    }
+
+    let coverPath = postDoc.cover;
+    if (req.file) {
+      const { originalname, path } = req.file;
+      const parts = originalname.split(".");
+      const ext = parts[parts.length - 1];
+      coverPath = path + "." + ext;
+      fs.renameSync(path, coverPath);
+    }
+
     await postDoc.updateOne({
-      tittle,
+      title,
       summary,
       content,
-      image: newPath ? newPath : postDoc.image,
+      cover: coverPath,
     });
-
     res.json(postDoc);
-  });
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
 };
 
 module.exports.findAllPosts = async (req, res) => {
-  res.json(
-    await Post.find()
+  try {
+    const posts = await Post.find()
       .populate("author", ["username"])
       .sort({ createdAt: -1 })
-      .limit(20)
-  );
+      .limit(20);
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
 };
 
 module.exports.findById = async (req, res) => {
-  const { id } = req.params;
-  const postDoc = await Post.findById(id).populate("author", ["username"]);
-  res.json(postDoc);
+  try {
+    const postDoc = await Post.findById(req.params.id).populate("author", [
+      "username",
+    ]);
+    if (!postDoc) {
+      throw new Error("Post not found.");
+    }
+    res.json(postDoc);
+  } catch (error) {
+    res.status(400).json(error.message);
+  }
 };
 
 module.exports.deletePost = async (req, res) => {
@@ -81,6 +98,6 @@ module.exports.deletePost = async (req, res) => {
     });
     res.json(deletedPost);
   } catch (error) {
-    res.json(error);
+    res.status(400).json(error.message);
   }
 };

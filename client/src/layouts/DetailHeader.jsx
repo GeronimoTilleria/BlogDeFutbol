@@ -4,7 +4,7 @@ import Navigation from '../components/headers/Navigation'
 
 const DetailHeader = () => {
     return (
-        <header>
+        <header className='mb-3'>
             <div className='bg-dark'>
                 <div className='main-container'>
                     <div className='d-flex justify-content-between align-items-center'>
